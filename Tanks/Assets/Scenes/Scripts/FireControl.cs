@@ -25,10 +25,14 @@ public class FireControl : MonoBehaviour
 
     private void FireBullets()
     {
-        float fireTrigger = Input.GetAxis("p" + playerNumber.ToString() + "Fire");
+        bool fireTrigger = Input.GetButtonDown("p" + playerNumber.ToString() + "Fire");
 
 
-        Debug.Log(fireTrigger);
+        if (fireTrigger)  //add fire rate
+        {
+            Instantiate(bulletObjects, firePoint.transform.position, barrelRotation.rotation);
+            Debug.Log(fireTrigger);
+        }
     }
     
 }
