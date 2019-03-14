@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,8 @@ public class FireControl : MonoBehaviour
     public GameObject firePoint;
     public Transform barrelRotation;
 
-
+    private bool canFire = true;
+    private float TimeToFire = 0;
 
     void Start()
     {
@@ -25,14 +27,37 @@ public class FireControl : MonoBehaviour
 
     private void FireBullets()
     {
-        bool fireTrigger = Input.GetButtonDown("p" + playerNumber.ToString() + "Fire");
+        bool fireTrigger = Input.GetButtonDown("P" + playerNumber.ToString() + "Fire");
 
 
-        if (fireTrigger)  //add fire rate
+        if (fireTrigger && canFire)  //add fire rate
         {
-            Instantiate(bulletObjects, firePoint.transform.position, barrelRotation.rotation);
-            Debug.Log(fireTrigger);
+            ShootBullets();
+        }
+
+        CheckFireRate();
+
+    }
+
+    private void CheckFireRate()
+    {
+        if (canFire == false)
+        {
+            if (TimeToFire > bulletObjects.GetComponent<BulletMove>().fireRate)
+            {
+                canFire = true;
+            }
+            else
+            {
+                TimeToFire += Time.deltaTime;
+            }
         }
     }
-    
+
+    private void ShootBullets()
+    {
+        Instantiate(bulletObjects, firePoint.transform.position, barrelRotation.rotation * Quaternion.Euler(-90f, 0f, 0f));
+        canFire = false;
+        TimeToFire = 0;
+    }
 }
