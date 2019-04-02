@@ -21,22 +21,28 @@ public class FireControl : MonoBehaviour
 
     void Update()
     {
-        FireBullets();
-    }
-
-
-    private void FireBullets()
-    {
         bool fireTrigger = Input.GetButtonDown("P" + playerNumber.ToString() + "Fire");
-
+        float MG42Trigger = Input.GetAxis("P" + playerNumber.ToString() + "FireMG42");
+        Debug.Log(MG42Trigger);
 
         if (fireTrigger && canFire)  //add fire rate
         {
             ShootBullets();
         }
 
+
         CheckFireRate();
 
+        FireBullets();
+    }
+
+
+    private void FireBullets()
+    {
+        GameObject myBullet = Instantiate(bulletObjects, firePoint.transform.position, barrelRotation.rotation * Quaternion.Euler(180f, 0f, 0f));
+        canFire = false;
+        TimeToFire = 0;
+        Destroy(myBullet, myBullet.GetComponent<BulletMove>().bulletLife);
     }
 
     private void CheckFireRate()
@@ -56,8 +62,10 @@ public class FireControl : MonoBehaviour
 
     private void ShootBullets()
     {
-        Instantiate(bulletObjects, firePoint.transform.position, barrelRotation.rotation * Quaternion.Euler(-90f, 0f, 0f));
+        
+        GameObject myBullet = Instantiate(bulletObjects, firePoint.transform.position, barrelRotation.rotation * Quaternion.Euler(180f, 0f, 0f));
         canFire = false;
         TimeToFire = 0;
+        Destroy(myBullet,myBullet.GetComponent<BulletMove>().bulletLife);
     }
 }
